@@ -12,15 +12,7 @@ class PaymentProcessor {
     if (!feeRate) {
       throw new Error(`Unsupported payment method: ${paymentMethod}`);
     }
-    
-    // Refactored: Apply progressive fee structure for higher amounts
-    let fee = amount * feeRate;
-    if (amount > 5000) {
-      // Reduce fee by 20% for amounts over $5000
-      fee = fee * 0.8;
-    }
-    
-    return fee;
+    return amount * feeRate;
   }
 
   processPayment(amount, paymentMethod) {
