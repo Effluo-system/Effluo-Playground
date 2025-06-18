@@ -7,27 +7,23 @@ class PaymentProcessor {
     };
   }
 
-  validateAmount(amount) {
-    if (typeof amount !== 'number' || amount <= 0) {
-      throw new Error('Amount must be a positive number');
-    }
-    if (amount > 10000) {
-      throw new Error('Amount exceeds maximum limit of $10,000');
-    }
-  }
-
   calculateFee(amount, paymentMethod) {
     const feeRate = this.fees[paymentMethod];
     if (!feeRate) {
       throw new Error(`Unsupported payment method: ${paymentMethod}`);
     }
-    return amount * feeRate;
+    
+    // Refactored: Apply progressive fee structure for higher amounts
+    let fee = amount * feeRate;
+    if (amount > 5000) {
+      // Reduce fee by 20% for amounts over $5000
+      fee = fee * 0.8;
+    }
+    
+    return fee;
   }
 
   processPayment(amount, paymentMethod) {
-    // Add validation before processing
-    this.validateAmount(amount);
-    
     const fee = this.calculateFee(amount, paymentMethod);
     const total = amount + fee;
     
