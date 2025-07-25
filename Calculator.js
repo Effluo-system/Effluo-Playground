@@ -15,6 +15,7 @@ class Calculator {
             throw new Error(`Unknown operation: ${operation}`);
         }
         
+
         validateNumbers(a, b);
         return this.operations[operation](a, b);
     }
@@ -23,6 +24,7 @@ class Calculator {
         return Object.keys(this.operations);
     }
 }
+
 
 function validateNumbers(a, b) {
     if (typeof a !== 'number' || typeof b !== 'number') {
