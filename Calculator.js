@@ -9,6 +9,8 @@ class Calculator {
     }
 
     calculate(operation, a, b) {
+        validateInput(a, b);
+        
         if (!this.operations[operation]) {
             throw new Error(`Unknown operation: ${operation}`);
         }
@@ -20,10 +22,13 @@ class Calculator {
     }
 }
 
-function validateNumbers(a, b) {
+function validateInput(a, b) { 
     if (typeof a !== 'number' || typeof b !== 'number') {
         throw new Error('Both arguments must be numbers');
     }
+    if (!isFinite(a) || !isFinite(b)) {
+        throw new Error('Arguments must be finite numbers');
+    }
 }
 
-module.exports = { Calculator, validateNumbers };
+module.exports = { Calculator, validateInput }; 
