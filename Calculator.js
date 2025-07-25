@@ -4,7 +4,9 @@ class Calculator {
             add: (a, b) => a + b,
             subtract: (a, b) => a - b,
             multiply: (a, b) => a * b,
-            divide: (a, b) => a / b
+            divide: (a, b) => a / b,
+            power: (a, b) => Math.pow(a, b),  
+            modulo: (a, b) => a % b          
         };
     }
 
@@ -12,6 +14,8 @@ class Calculator {
         if (!this.operations[operation]) {
             throw new Error(`Unknown operation: ${operation}`);
         }
+        
+        validateNumbers(a, b);
         return this.operations[operation](a, b);
     }
 
