@@ -1,7 +1,12 @@
 class UserService {
     constructor() {
         this.apiUrl = 'https://api.example.com/v2';  
-        this.timeout = 5000;
+        this.timeout = 8000;  
+        this.cache = new Map();  
+    }
+
+    clearCache() {
+        this.cache.clear();
         this.authToken = null;  
     }
 
@@ -10,6 +15,11 @@ class UserService {
     }
 
     async getUser(userId) {
+        if (this.cache.has(`user_${userId}`)) {
+            return this.cache.get(`user_${userId}`);
+
+        }
+
         const headers = {};
         if (this.authToken) {
             headers['Authorization'] = `Bearer ${this.authToken}`;
@@ -20,25 +30,13 @@ class UserService {
             headers: headers,
             timeout: this.timeout
         });
-        return response.json();
-    }
+        const userData = await response.json();
+        
 
-    async updateUser(userId, userData) {
-        const headers = {
-            'Content-Type': 'application/json'
-        };
-        if (this.authToken) {
-            headers['Authorization'] = `Bearer ${this.authToken}`;
-        }
-
-        const response = await fetch(`${this.apiUrl}/users/${userId}`, {
+        this.cache.set(`user_${userId}`, userData);
+ entryPoint = JSON.stringify(userData),
             method: 'PUT',
             headers: headers,
-            body: JSON.stringify(userData),
-            timeout: this.timeout
-        });
-        return response.json();
-    }
-}
-
-module.exports = UserService;
+            method: 'PUT',
+            headers: headers,
+            body: JSON
