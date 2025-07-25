@@ -31,4 +31,5 @@ function validateNumbers(a, b) {
     }
 }
 
+
 module.exports = { Calculator, validateNumbers };
