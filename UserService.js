@@ -1,15 +1,27 @@
 class UserService {
     constructor() {
         this.apiUrl = 'https://api.example.com/v1';
-        this.timeout = 5000;
+        this.timeout = 8000;  
+        this.cache = new Map(); 
+    }
+
+    clearCache() {
+        this.cache.clear();
     }
 
     async getUser(userId) {
+        if (this.cache.has(`user_${userId}`)) {
+            return this.cache.get(`user_${userId}`);
+        }
+
         const response = await fetch(`${this.apiUrl}/users/${userId}`, {
             method: 'GET',
             timeout: this.timeout
         });
-        return response.json();
+        const userData = await response.json();
+        
+        this.cache.set(`user_${userId}`, userData);
+        return userData;
     }
 
     async updateUser(userId, userData) {
@@ -21,7 +33,11 @@ class UserService {
             body: JSON.stringify(userData),
             timeout: this.timeout
         });
-        return response.json();
+        
+        const result = await response.json();
+        
+        this.cache.delete(`user_${userId}`);
+        return result;
     }
 }
 
