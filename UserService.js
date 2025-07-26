@@ -1,43 +1,43 @@
 class UserService {
     constructor() {
-        this.apiUrl = 'https://api.example.com/v2';  
-        this.timeout = 5000;
-        this.authToken = null;  
+        this.apiUrl = 'https://api.example.com/v1';
+        this.timeout = 8000;  
+        this.cache = new Map(); 
     }
 
-    setAuthToken(token) {
-        this.authToken = token;
+    clearCache() {
+        this.cache.clear();
     }
-
+    
     async getUser(userId) {
-        const headers = {};
-        if (this.authToken) {
-            headers['Authorization'] = `Bearer ${this.authToken}`;
+        if (this.cache.has(`user_${userId}`)) {
+            return this.cache.get(`user_${userId}`);
         }
-        
+
         const response = await fetch(`${this.apiUrl}/users/${userId}`, {
             method: 'GET',
-            headers: headers,
             timeout: this.timeout
         });
-        return response.json();
+        const userData = await response.json();
+        
+        this.cache.set(`user_${userId}`, userData);
+        return userData;
     }
 
     async updateUser(userId, userData) {
-        const headers = {
-            'Content-Type': 'application/json'
-        };
-        if (this.authToken) {
-            headers['Authorization'] = `Bearer ${this.authToken}`;
-        }
-
         const response = await fetch(`${this.apiUrl}/users/${userId}`, {
             method: 'PUT',
-            headers: headers,
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(userData),
             timeout: this.timeout
         });
-        return response.json();
+        
+        const result = await response.json();
+        
+        this.cache.delete(`user_${userId}`);
+        return result;
     }
 }
 

@@ -4,16 +4,18 @@ class Calculator {
             add: (a, b) => a + b,
             subtract: (a, b) => a - b,
             multiply: (a, b) => a * b,
-            divide: (a, b) => a / b
+            divide: (a, b) => a / b,
+            power: (a, b) => Math.pow(a, b),  
+            modulo: (a, b) => a % b          
         };
     }
 
     calculate(operation, a, b) {
-        validateInput(a, b);
-        
         if (!this.operations[operation]) {
             throw new Error(`Unknown operation: ${operation}`);
         }
+        
+        validateNumbers(a, b);
         return this.operations[operation](a, b);
     }
 
@@ -22,13 +24,10 @@ class Calculator {
     }
 }
 
-function validateInput(a, b) {
+function validateNumbers(a, b) {
     if (typeof a !== 'number' || typeof b !== 'number') {
         throw new Error('Both arguments must be numbers');
     }
-    if (!isFinite(a) || !isFinite(b)) {
-        throw new Error('Arguments must be finite numbers');
-    }
 }
 
-module.exports = { Calculator, validateInput }; 
+module.exports = { Calculator, validateNumbers };
