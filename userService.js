@@ -16,6 +16,7 @@ class UserService {
 
         const response = await fetch(`${this.apiUrl}/users/${userId}`, {
             method: 'GET',
+            headers: headers,
             timeout: this.timeout
         });
         const userData = await response.json();
